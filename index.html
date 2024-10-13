@@ -1,41 +1,66 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpendLog</title>
+  <title>Call Azure Function API</title>
+  <style>
+    #progressBar {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background-color: #4caf50;
+      animation: progressAnimation 2s linear infinite;
+    }
+    @keyframes progressAnimation {
+      0% { width: 0%; }
+      50% { width: 50%; }
+      100% { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Azure Function API Call Example</h1>
-    <button id="callApiButton">Call API</button>
-    <div id="result"></div>
-    <script>
-        document.getElementById("callApiButton").addEventListener("click", function() {
-          // Azure FunctionのエンドポイントURL
-          const apiUrl = "https://hoge1129.azurewebsites.net/api/Function1?code=9nVh71gRmzaW34EaqpjFSsQGwxx8KYTfa_e6wixLwU-7AzFuRbKxeQ%3D%3D";
-          
-          // APIを呼び出すためのオプション
-          const requestOptions = {
-            method: "GET", // POSTに変更する場合、他のオプションも追加してな。
-          };
-    
-          // Fetch APIを使ってAzure Functionにリクエストを送る
-          fetch(apiUrl, requestOptions)
-            .then(response => {
-              if (!response.ok) {
-                throw new Error("API call failed: " + response.statusText);
-              }
-              return response.json(); // レスポンスがJSON形式の場合
-            })
-            .then(data => {
-              // 成功時の処理
-              document.getElementById("result").innerText = JSON.stringify(data);
-            })
-            .catch(error => {
-              // エラーハンドリング
-              document.getElementById("result").innerText = "Error: " + error.message;
-            });
+  <h1>Azure Function API Call Example</h1>
+  <button id="callApiButton">Call API</button>
+  <div id="progressBar"></div>
+  <div id="result"></div>
+
+  <script>
+    document.getElementById("callApiButton").addEventListener("click", function() {
+      // プログレスバーを表示
+      const progressBar = document.getElementById("progressBar");
+      progressBar.style.display = "block";
+      
+      // Azure FunctionのエンドポイントURL
+      const apiUrl = "https://hoge1129.azurewebsites.net/api/Function1?code=9nVh71gRmzaW34EaqpjFSsQGwxx8KYTfa_e6wixLwU-7AzFuRbKxeQ%3D%3D";
+      
+      // APIを呼び出すためのオプション
+      const requestOptions = {
+        method: "GET", // POSTに変更する場合、他のオプションも追加してな。
+      };
+
+      // Fetch APIを使ってAzure Functionにリクエストを送る
+      fetch(apiUrl, requestOptions)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("API call failed: " + response.statusText);
+          }
+          return response.json(); // レスポンスがJSON形式の場合
+        })
+        .then(data => {
+          // 成功時の処理
+          document.getElementById("result").innerText = JSON.stringify(data);
+        })
+        .catch(error => {
+          // エラーハンドリング
+          document.getElementById("result").innerText = "Error: " + error.message;
+        })
+        .finally(() => {
+          // プログレスバーを非表示
+          progressBar.style.display = "none";
         });
-      </script>
+    });
+  </script>
 </body>
 </html>
